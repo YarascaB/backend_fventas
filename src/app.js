@@ -15,6 +15,16 @@ const clienteDetalleRoutes =
 const solicitudesRoutes =
     require("./routes/solicitudes.routes");
 
+const cronogramaRoutes =
+    require(
+      "./routes/cronograma.routes"
+    );
+
+app.use(
+  "/api/cronograma",
+  cronogramaRoutes
+);
+
 const app = express();
 
 app.use(cors());
