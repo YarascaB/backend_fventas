@@ -73,3 +73,10 @@ const ahorrosRoutes =
 require("./routes/ahorros.routes");
 app.use("/api/ahorros", ahorrosRoutes);
 
+const transaccionesRoutes =
+require("./routes/transacciones.routes");
+
+app.use(
+  "/api/transacciones",
+  transaccionesRoutes
+);
