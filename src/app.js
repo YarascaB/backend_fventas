@@ -20,12 +20,14 @@ const cronogramaRoutes =
       "./routes/cronograma.routes"
     );
 
+const app = express();
+
 app.use(
   "/api/cronograma",
   cronogramaRoutes
 );
 
-const app = express();
+
 
 app.use(cors());
 app.use(express.json());
