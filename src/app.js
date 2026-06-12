@@ -61,3 +61,15 @@ app.listen(
   }
 );
 
+const cuentasRoutes =
+require("./routes/cuentas.routes");
+
+app.use(
+  "/api/cuentas",
+  cuentasRoutes,
+);
+
+const ahorrosRoutes =
+require("./routes/ahorros.routes");
+app.use("/api/ahorros", ahorrosRoutes);
+
