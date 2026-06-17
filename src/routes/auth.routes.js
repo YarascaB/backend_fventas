@@ -60,6 +60,80 @@ router.post("/login", async (req, res) => {
   }
 });
 
+router.post("/register", async (req, res) => {
+
+  try {
+
+    const {
+      nombre,
+      apellido,
+      email,
+      password
+    } = req.body;
+
+    const existe = await pool.query(
+      `
+      SELECT id
+      FROM usuarios_mock
+      WHERE email = $1
+      `,
+      [email]
+    );
+
+    if (existe.rows.length > 0) {
+
+      return res.status(400).json({
+        success: false,
+        message: "El correo ya existe"
+      });
+    }
+
+    const result = await pool.query(
+      `
+      INSERT INTO usuarios_mock
+      (
+        email,
+        nombre,
+        apellido,
+        password_hash,
+        rol,
+        activo
+      )
+      VALUES
+      (
+        $1,$2,$3,$4,
+        'cliente',
+        true
+      )
+      RETURNING *
+      `,
+      [
+        email,
+        nombre,
+        apellido,
+        password
+      ]
+    );
+
+    res.json({
+
+      success: true,
+
+      usuario: result.rows[0]
+    });
+
+  } catch (error) {
+
+    console.log(error);
+
+    res.status(500).json({
+
+      success: false,
+      error: error.message
+    });
+  }
+});
+
 router.put("/reset-password", async (req, res) => {
 
   try {
