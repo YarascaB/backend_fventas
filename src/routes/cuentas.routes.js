@@ -56,4 +56,50 @@ router.get("/:userId", async (req, res) => {
   }
 });
 
+// SALDO CUENTA PRINCIPAL
+
+router.get("/saldo/:userId", async (req, res) => {
+
+  try {
+
+    const { userId } = req.params;
+
+    const result = await pool.query(
+      `
+      SELECT saldo
+      FROM cuentas
+      WHERE user_id = $1
+      `,
+      [userId]
+    );
+
+    if (result.rows.length === 0) {
+
+      return res.status(404).json({
+
+        success: false,
+
+        message: "Cuenta no encontrada",
+      });
+    }
+
+    res.json({
+
+      success: true,
+
+      saldo: result.rows[0].saldo,
+    });
+
+  } catch (error) {
+
+    res.status(500).json({
+
+      success: false,
+
+      error: error.message,
+    });
+  }
+});
+
+module.exports = router;
 module.exports = router;
