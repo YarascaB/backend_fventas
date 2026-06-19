@@ -96,3 +96,19 @@ app.use(
   "/api/misSolicitudes",
   misSolicitudesRoutes
 );
+
+const buroRoutes =
+require("./routes/buro.routes");
+
+app.use(
+  "/api/buro",
+  buroRoutes
+);
+
+const desembolsoRoutes =
+require("./routes/desembolso.routes");
+
+app.use(
+  "/api/desembolso",
+  desembolsoRoutes
+);
