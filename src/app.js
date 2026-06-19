@@ -88,3 +88,11 @@ app.use(
   "/api/transacciones",
   transferenciasRoutes
 );
+
+const misSolicitudesRoutes =
+require("./routes/misSolicitudes.routes");
+
+app.use(
+  "/api/misSolicitudes",
+  misSolicitudesRoutes
+);
