@@ -112,3 +112,35 @@ app.use(
   "/api/desembolso",
   desembolsoRoutes
 );
+
+const misCreditosRoutes =
+require("./routes/misCreditos.routes");
+
+app.use(
+  "/api/mis-creditos",
+  misCreditosRoutes
+);
+
+const pagosRoutes =
+require("./routes/pagos.routes");
+
+app.use(
+  "/api/pagos",
+  pagosRoutes
+);
+
+const historialSolicitudesRoutes =
+require("./routes/historialSolicitudes.routes");
+
+app.use(
+  "/api/historial-solicitudes",
+  historialSolicitudesRoutes
+);
+
+const notificacionesRoutes =
+require("./routes/notificaciones.routes");
+
+app.use(
+  "/api/notificaciones",
+  notificacionesRoutes
+);
