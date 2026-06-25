@@ -8,7 +8,30 @@ router.get("/:userId", async (req, res) => {
 
     const { userId } = req.params;
 
-    const result = await pool.query(
+    // primero buscar solicitud del cliente
+
+    const solicitud = await pool.query(
+      `
+      SELECT *
+      FROM solicitudes_prestamo
+      WHERE user_id = $1
+      ORDER BY created_at DESC
+      LIMIT 1
+      `,
+      [userId]
+    );
+
+    if (solicitud.rows.length > 0) {
+
+      return res.json({
+        success: true,
+        credito: solicitud.rows[0]
+      });
+    }
+
+    // si no existe solicitud buscar crédito preaprobado
+
+    const credito = await pool.query(
       `
       SELECT *
       FROM creditos_preaprobados
@@ -19,28 +42,23 @@ router.get("/:userId", async (req, res) => {
       [userId]
     );
 
-    if (result.rows.length === 0) {
+    if (credito.rows.length > 0) {
 
-      return res.status(404).json({
-        success: false,
-        message: "Sin créditos"
+      return res.json({
+        success: true,
+        credito: credito.rows[0]
       });
     }
 
-    res.json({
-
-      success: true,
-
-      credito:
-          result.rows[0]
+    return res.status(404).json({
+      success: false,
+      message: "Sin créditos"
     });
 
   } catch (error) {
 
     res.status(500).json({
-
       success: false,
-
       error: error.message
     });
   }
