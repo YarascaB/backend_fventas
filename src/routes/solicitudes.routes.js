@@ -143,6 +143,28 @@ router.put("/:id", async (req, res) => {
 
       [estado, id]
     );
+    const solicitud = result.rows[0];
+
+      await pool.query(
+      `
+      INSERT INTO notificaciones
+      (
+          user_id,
+          titulo,
+          mensaje
+      )
+      VALUES
+      (
+          $1,
+          $2,
+          $3
+      )
+      `,
+      [
+          solicitud.user_id,
+          "Estado de Solicitud",
+          `Tu solicitud fue ${estado}`
+      ]);
 
     res.json({
 
