@@ -145,10 +145,3 @@ app.use(
   notificacionesRoutes
 );
 
-const notificacionesRoutes =
-require("./routes/notificaciones.routes");
-
-app.use(
-    "/api/notificaciones",
-    notificacionesRoutes
-);
