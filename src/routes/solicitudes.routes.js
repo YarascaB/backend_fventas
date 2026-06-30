@@ -130,8 +130,7 @@ router.put("/:id", async (req, res) => {
     const { estado } = req.body;
 
     const result = await pool.query(
-
-      `
+  `
       UPDATE solicitudes_prestamo
 
       SET estado = $1
@@ -143,9 +142,15 @@ router.put("/:id", async (req, res) => {
 
       [estado, id]
     );
+
     const solicitud = result.rows[0];
 
-      await pool.query(
+    console.log("Solicitud actualizada:");
+    console.log(solicitud);
+
+    console.log("Insertando notificación...");
+
+    await pool.query(
       `
       INSERT INTO notificaciones
       (
@@ -164,7 +169,8 @@ router.put("/:id", async (req, res) => {
           solicitud.user_id,
           "Estado de Solicitud",
           `Tu solicitud fue ${estado}`
-      ]);
+      ]
+    );
 
     res.json({
 
