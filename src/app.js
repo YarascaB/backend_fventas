@@ -145,3 +145,34 @@ app.use(
   notificacionesRoutes
 );
 
+const dashboardRoutes =
+require("./routes/dashboard.routes");
+
+app.use(
+"/api/dashboard",
+dashboardRoutes,
+);
+
+const clientesAdminRoutes =
+require("./routes/clientesAdmin.routes");
+
+app.use(
+  "/api/admin/clientes",
+  clientesAdminRoutes
+);
+
+const clienteDetalleAdmin =
+require("./routes/clienteDetalleAdmin.routes");
+
+app.use(
+"/api/admin/cliente",
+clienteDetalleAdmin
+);
+
+const creditosAdminRoutes =
+require("./routes/creditosAdmin.routes");
+
+app.use(
+"/api/admin/creditos",
+creditosAdminRoutes,
+);

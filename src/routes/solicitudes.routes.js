@@ -231,4 +231,57 @@ router.get("/cliente/:userId", async (req, res) => {
   }
 });
 
+router.get("/detalle/:id", async (req, res) => {
+
+  try {
+
+    const { id } = req.params;
+
+    const result = await pool.query(
+      `
+      SELECT
+          sp.*,
+          pc.nombres,
+          pc.apellidos,
+          pc.dni,
+          pc.telefono,
+          pc.ocupacion,
+          pc.ingreso_mensual
+      FROM solicitudes_prestamo sp
+      JOIN perfiles_clientes pc
+      ON sp.user_id = pc.user_id
+      WHERE sp.id = $1
+      `,
+      [id]
+    );
+
+    if (result.rows.length == 0) {
+
+      return res.status(404).json({
+        success:false
+      });
+    }
+
+    res.json({
+
+      success:true,
+
+      solicitud:result.rows[0]
+
+    });
+
+  } catch(error){
+
+    res.status(500).json({
+
+      success:false,
+
+      error:error.message
+
+    });
+
+  }
+
+});
+
 module.exports = router;
