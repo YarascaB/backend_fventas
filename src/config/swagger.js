@@ -1,50 +1,27 @@
+const path = require("path");
 const swaggerJSDoc = require("swagger-jsdoc");
 
 const swaggerDefinition = {
-  openapi: "3.0.1",
+  openapi: "3.0.0",
   info: {
     title: "Core Financiero - Fuerza de Ventas",
     version: "1.0.0",
     description:
-      "API de Core Financiero para gestión de clientes, créditos, transacciones, desembolsos y operaciones bancarias digitales.",
-    contact: {
-      name: "Equipo de Desarrollo",
-    },
+      "API de Core Financiero para gestión de clientes, créditos, transacciones y operaciones bancarias digitales.",
   },
-
   servers: [
     {
       url: "https://backend-fventas.onrender.com",
-      description: "Servidor Producción (Render)",
-    },
-    {
-      url: "http://localhost:3000",
-      description: "Servidor Local",
-    },
-  ],
-
-  components: {
-    securitySchemes: {
-      bearerAuth: {
-        type: "http",
-        scheme: "bearer",
-        bearerFormat: "JWT",
-      },
-    },
-  },
-
-  security: [
-    {
-      bearerAuth: [],
+      description: "Servidor Producción",
     },
   ],
 };
 
 const options = {
-  swaggerDefinition,
-  apis: ["./routes/*.js"], // todas tus rutas
+  definition: swaggerDefinition,
+
+  // 🔥 CLAVE: ruta absoluta correcta en Render
+  apis: [path.join(__dirname, "../routes/*.js")],
 };
 
-const swaggerSpec = swaggerJSDoc(options);
-
-module.exports = swaggerSpec;
+module.exports = swaggerJSDoc(options);
