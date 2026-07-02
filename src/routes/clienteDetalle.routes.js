@@ -4,6 +4,65 @@ const router = express.Router();
 
 const pool = require("../config/db");
 
+
+/**
+ * @swagger
+ * /api/clientes/{userId}:
+ *   get:
+ *     tags:
+ *       - Clientes
+ *     summary: Obtener detalle de un cliente
+ *     description: |
+ *       Obtiene toda la información de un cliente específico,
+ *       incluyendo datos personales, información del negocio,
+ *       capacidad financiera y resultado del score transaccional.
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         description: Identificador único del cliente.
+ *         schema:
+ *           type: integer
+ *           example: 15
+ *     responses:
+ *       200:
+ *         description: Información del cliente obtenida correctamente.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: true
+ *               cliente:
+ *                 user_id: 15
+ *                 nombres: "Jairo"
+ *                 apellidos: "Yarasca Batalla"
+ *                 dni: "76543210"
+ *                 genero: "Masculino"
+ *                 tipo_negocio: "Ferretería"
+ *                 zona_negocio: "Huancayo"
+ *                 antiguedad_negocio: 8
+ *                 ingreso_mensual_est: 12500
+ *                 gasto_mensual_est: 6700
+ *                 deuda_actual: 15000
+ *                 entidades_deuda: 2
+ *                 score: 845
+ *                 segmento: "A"
+ *                 recomendacion: "Aprobado"
+ *                 monto_max_sugerido: 30000
+ *       404:
+ *         description: Cliente no encontrado.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: "Cliente no encontrado"
+ *       500:
+ *         description: Error interno del servidor.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               error: "Error interno del servidor"
+ */
 router.get("/:userId", async (req, res) => {
 
   try {

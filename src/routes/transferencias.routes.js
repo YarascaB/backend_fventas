@@ -2,6 +2,69 @@ const express = require("express");
 const router = express.Router();
 const pool = require("../config/db");
 
+/**
+ * @swagger
+ * /api/transferencias/transferir:
+ *   post:
+ *     tags:
+ *       - Transferencias
+ *     summary: Transferir dinero entre cuentas
+ *     description: |
+ *       Realiza una transferencia de dinero entre dos usuarios.
+ *       La operación es transaccional (BEGIN / COMMIT / ROLLBACK),
+ *       asegurando consistencia en los saldos y registros de transacciones.
+ *
+ *       Flujo:
+ *       - Valida cuenta del emisor
+ *       - Valida usuario y cuenta del receptor
+ *       - Verifica saldo disponible
+ *       - Actualiza saldos
+ *       - Registra movimientos en ambas cuentas
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - senderUserId
+ *               - receiverEmail
+ *               - monto
+ *             properties:
+ *               senderUserId:
+ *                 type: integer
+ *                 example: 15
+ *               receiverEmail:
+ *                 type: string
+ *                 example: cliente@correo.com
+ *               monto:
+ *                 type: number
+ *                 example: 500
+ *     responses:
+ *       200:
+ *         description: Transferencia realizada correctamente.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: true
+ *               message: Transferencia realizada
+ *       400:
+ *         description: Saldo insuficiente.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Saldo insuficiente
+ *       404:
+ *         description: Cuenta o usuario no encontrado.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Cuenta destino no encontrada
+ *       500:
+ *         description: Error interno del servidor.
+ */
 router.post("/transferir", async (req, res) => {
 
   const client = await pool.connect();

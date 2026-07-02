@@ -2,6 +2,51 @@ const express = require("express");
 const router = express.Router();
 const pool = require("../config/db");
 
+/**
+ * @swagger
+ * /api/desembolso/{creditoId}:
+ *   post:
+ *     tags:
+ *       - Desembolso
+ *     summary: Desembolsar crédito preaprobado
+ *     description: |
+ *       Ejecuta el desembolso de un crédito preaprobado.
+ *
+ *       Flujo completo:
+ *       - Valida el crédito preaprobado
+ *       - Obtiene la cuenta del cliente
+ *       - Abona el monto del crédito a la cuenta
+ *       - Registra la transacción de crédito
+ *       - Genera automáticamente el cronograma de pagos
+ *       - Actualiza el estado del crédito a "desembolsado"
+ *
+ *       Este endpoint representa la activación real del crédito en el sistema.
+ *     parameters:
+ *       - in: path
+ *         name: creditoId
+ *         required: true
+ *         description: Identificador del crédito preaprobado.
+ *         schema:
+ *           type: integer
+ *           example: 10
+ *     responses:
+ *       200:
+ *         description: Crédito desembolsado correctamente.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: true
+ *               saldo: 15500.00
+ *       404:
+ *         description: Crédito o cuenta no encontrada.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: "Crédito no encontrado"
+ *       500:
+ *         description: Error interno del servidor.
+ */
 router.post("/:creditoId", async (req, res) => {
 
   try {

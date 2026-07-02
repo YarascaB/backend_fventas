@@ -2,6 +2,39 @@ const express = require("express");
 const router = express.Router();
 const pool = require("../config/db");
 
+
+/**
+ * @swagger
+ * /api/transacciones/{userId}:
+ *   get:
+ *     tags:
+ *       - Transacciones
+ *     summary: Consultar movimientos
+ *     description: Obtiene los últimos 20 movimientos financieros de un cliente.
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *           example: 15
+ *         description: Identificador del cliente.
+ *     responses:
+ *       200:
+ *         description: Lista de movimientos obtenida correctamente.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: true
+ *               movimientos:
+ *                 - id: 1
+ *                   tipo: credito
+ *                   descripcion: Depósito
+ *                   monto: 500
+ *                   fecha: "2026-07-02T09:00:00Z"
+ *       500:
+ *         description: Error interno del servidor.
+ */
 router.get("/:userId", async (req, res) => {
 
   try {
@@ -45,6 +78,57 @@ router.get("/:userId", async (req, res) => {
   }
 });
 
+
+/**
+ * @swagger
+ * /api/transacciones:
+ *   post:
+ *     tags:
+ *       - Transacciones
+ *     summary: Registrar transacción
+ *     description: Registra una transacción de crédito o débito y actualiza el saldo de la cuenta.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - userId
+ *               - tipo
+ *               - descripcion
+ *               - monto
+ *             properties:
+ *               userId:
+ *                 type: integer
+ *                 example: 15
+ *               tipo:
+ *                 type: string
+ *                 enum:
+ *                   - credito
+ *                   - debito
+ *                 example: debito
+ *               descripcion:
+ *                 type: string
+ *                 example: Compra POS
+ *               monto:
+ *                 type: number
+ *                 example: 250
+ *     responses:
+ *       200:
+ *         description: Transacción realizada correctamente.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: true
+ *               saldo: 13250.50
+ *       400:
+ *         description: Saldo insuficiente.
+ *       404:
+ *         description: Cuenta no encontrada.
+ *       500:
+ *         description: Error interno.
+ */
 router.post("/", async (req, res) => {
 
   try {
@@ -163,6 +247,49 @@ router.post("/", async (req, res) => {
   }
 });
 
+/**
+ * @swagger
+ * /api/transacciones/transferir:
+ *   post:
+ *     tags:
+ *       - Transacciones
+ *     summary: Realizar transferencia
+ *     description: Transfiere dinero desde la cuenta del cliente hacia otro usuario registrado.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - senderUserId
+ *               - receiverEmail
+ *               - monto
+ *             properties:
+ *               senderUserId:
+ *                 type: integer
+ *                 example: 15
+ *               receiverEmail:
+ *                 type: string
+ *                 example: cliente@correo.com
+ *               monto:
+ *                 type: number
+ *                 example: 800
+ *     responses:
+ *       200:
+ *         description: Transferencia realizada correctamente.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: true
+ *               message: Transferencia realizada
+ *       400:
+ *         description: Saldo insuficiente.
+ *       404:
+ *         description: Cuenta o destinatario no encontrado.
+ *       500:
+ *         description: Error interno del servidor.
+ */
 router.post("/transferir", async (req, res) => {
 
   try {
@@ -355,6 +482,52 @@ router.post("/transferir", async (req, res) => {
   }
 });
 
+
+/**
+ * @swagger
+ * /api/transacciones/pago:
+ *   post:
+ *     tags:
+ *       - Transacciones
+ *     summary: Pagar un servicio
+ *     description: |
+ *       Realiza el pago de un servicio (agua, luz, internet, teléfono, etc.)
+ *       descontando el monto de la cuenta principal del cliente y registrando
+ *       la transacción.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - userId
+ *               - servicio
+ *               - monto
+ *             properties:
+ *               userId:
+ *                 type: integer
+ *                 example: 15
+ *               servicio:
+ *                 type: string
+ *                 example: Internet
+ *               monto:
+ *                 type: number
+ *                 example: 120.50
+ *     responses:
+ *       200:
+ *         description: Pago realizado correctamente.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: true
+ *       400:
+ *         description: Saldo insuficiente.
+ *       404:
+ *         description: Cuenta no encontrada.
+ *       500:
+ *         description: Error interno del servidor.
+ */
 router.post("/pago", async (req, res) => {
 
   try {
@@ -445,6 +618,49 @@ router.post("/pago", async (req, res) => {
   }
 });
 
+
+/**
+ * @swagger
+ * /api/transacciones/recarga:
+ *   post:
+ *     tags:
+ *       - Transacciones
+ *     summary: Recargar celular
+ *     description: |
+ *       Realiza una recarga telefónica descontando el monto desde la
+ *       cuenta principal del cliente.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - userId
+ *               - numero
+ *               - monto
+ *             properties:
+ *               userId:
+ *                 type: integer
+ *                 example: 15
+ *               numero:
+ *                 type: string
+ *                 example: "987654321"
+ *               monto:
+ *                 type: number
+ *                 example: 20
+ *     responses:
+ *       200:
+ *         description: Recarga realizada correctamente.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: true
+ *       400:
+ *         description: Saldo insuficiente.
+ *       500:
+ *         description: Error interno del servidor.
+ */
 router.post("/recarga", async (req, res) => {
 
   try {
@@ -524,6 +740,45 @@ router.post("/recarga", async (req, res) => {
   }
 });
 
+
+/**
+ * @swagger
+ * /api/transacciones/deposito:
+ *   post:
+ *     tags:
+ *       - Transacciones
+ *     summary: Depositar en cuenta de ahorro
+ *     description: |
+ *       Registra un depósito hacia la cuenta de ahorro del cliente
+ *       y genera automáticamente el movimiento correspondiente.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - userId
+ *               - monto
+ *             properties:
+ *               userId:
+ *                 type: integer
+ *                 example: 15
+ *               monto:
+ *                 type: number
+ *                 example: 500
+ *     responses:
+ *       200:
+ *         description: Depósito realizado correctamente.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: true
+ *       404:
+ *         description: Cuenta de ahorro no encontrada.
+ *       500:
+ *         description: Error interno del servidor.
+ */
 router.post("/deposito", async (req, res) => {
 
   try {

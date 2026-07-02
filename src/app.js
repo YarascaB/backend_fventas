@@ -2,6 +2,8 @@ require("dotenv").config();
 
 const express = require("express");
 const cors = require("cors");
+const swaggerUi = require("swagger-ui-express");
+const swaggerSpec = require("./docs/swagger");
 
 const authRoutes =
     require("./routes/auth.routes");
@@ -41,14 +43,22 @@ app.use("/api/clientes", clienteDetalleRoutes);
 app.use("/api/solicitudes", solicitudesRoutes);
 
 app.get("/", (req, res) => {
-
   res.json({
-    message: "API funcionando"
+    name: "Core Financiero - Fuerza de Ventas",
+    status: "running",
+    documentation: "/docs",
+    version: "1.0.0",
   });
 });
 
 const PORT =
   process.env.PORT || 3000;
+
+app.use(
+  "/docs",
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerSpec)
+);
 
 app.listen(
   PORT,

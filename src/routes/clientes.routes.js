@@ -4,6 +4,50 @@ const router = express.Router();
 
 const pool = require("../config/db");
 
+/**
+ * @swagger
+ * /api/clientes:
+ *   get:
+ *     tags:
+ *       - Clientes
+ *     summary: Listar clientes
+ *     description: |
+ *       Obtiene la cartera de clientes junto con su información comercial
+ *       y el resultado del score transaccional.
+ *
+ *       La información incluye:
+ *       - Datos personales del cliente.
+ *       - Tipo y zona de negocio.
+ *       - Score transaccional.
+ *       - Segmento asignado.
+ *       - Recomendación de crédito.
+ *       - Monto máximo sugerido.
+ *     responses:
+ *       200:
+ *         description: Lista de clientes obtenida correctamente.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: true
+ *               clientes:
+ *                 - user_id: 15
+ *                   nombres: "Jairo"
+ *                   apellidos: "Yarasca Batalla"
+ *                   tipo_negocio: "Ferretería"
+ *                   zona_negocio: "Huancayo"
+ *                   score: 845
+ *                   segmento: "A"
+ *                   recomendacion: "Aprobado"
+ *                   monto_max_sugerido: 30000
+ *       500:
+ *         description: Error interno del servidor.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               error: "Error al obtener los clientes."
+ */
+
 router.get("/", async (req, res) => {
 
   try {
